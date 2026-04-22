@@ -11,7 +11,7 @@ seed = 42
 np.random.seed(seed)
 
 # --- Load Data ---
-DATA_PATH = "data/exports/20260124_124114/annotations_with_demographics.csv"
+DATA_PATH = "data/annotations.csv"
 df = pd.read_csv(DATA_PATH)
 
 dimensions = [
@@ -23,10 +23,9 @@ dimensions = [
 ]
 
 # --- Preprocessing ---
-# Filter out gold standard trials and excluded participants
+# Filter out gold standard trials
 df_clean = df[
-    (df["is_gold_standard"] == 0) &
-    (df["should_exclude"] == False)
+    (df["is_gold_standard"] == 0)
 ].copy()
 
 # Summary statistics
@@ -44,20 +43,23 @@ corr = df_clean[dimensions].corr(method='spearman')
 corr.index = corr.index.str.replace('_', ' ').str.title().str.replace('Cui', 'CUI')
 corr.columns = corr.columns.str.replace('_', ' ').str.title().str.replace('Cui', 'CUI')
 
+# Create custom annotations without leading zeros for APA style (e.g., ".85" instead of "0.85")
+annot_labels = corr.map(lambda v: f"{v:.2f}".replace("0.", ".").replace("-0.", "-.").replace("1.00", "1.0"))
+
 # Plot the clustermap
 g = sns.clustermap(
     corr, 
     method='ward',
-    annot=True,
-    annot_kws={"size": 6},
-    fmt=".2f",
+    annot=annot_labels, # Use custom labels
+    annot_kws={"size": 8},
+    fmt="",             # Format is handled by the custom strings
     cmap='RdBu_r',
     vmin=0, vmax=1,
     figsize=(7.2, 7.2),
     linewidths=0.5,
     tree_kws=dict(linewidths=1.5, colors='#999999'),
     dendrogram_ratio=0.12,
-    cbar_pos=(-0.15, 0.2, 0.02, 0.3)
+    cbar_pos=None
 )
 
 # UI Adjustments
@@ -84,4 +86,5 @@ for s, h in blocks:
     g.ax_heatmap.add_patch(Rectangle((s, s), h, h, fill=False, lw=1.5, edgecolor='black'))
 
 # Save results
-plt.savefig("correlation_heatmap.pdf", format='pdf', bbox_inches='tight')
+import os; os.makedirs("output", exist_ok=True)
+plt.savefig("output/correlation_heatmap.pdf", format='pdf', bbox_inches='tight')

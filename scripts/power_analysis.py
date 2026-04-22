@@ -18,7 +18,7 @@ import os
 
 # --- Setup ---
 # Ensure the output directory exists
-output_dir = "img"
+output_dir = "output"
 os.makedirs(output_dir, exist_ok=True)
 
 # Use better styling for plots
@@ -134,7 +134,6 @@ def run_power_analysis_plot():
     # Save as vector graphic
     save_path = os.path.join(output_dir, "icc_power_analysis_acm.pdf")
     plt.savefig(save_path, bbox_inches="tight")
-    # NOTE: Absolute path removed for anonymity
     print(f"Saved figure to {save_path}")
     
     # plt.show() # Commented out for script execution

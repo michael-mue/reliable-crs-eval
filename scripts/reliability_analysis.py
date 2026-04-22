@@ -8,10 +8,10 @@ import statsmodels.api as sm
 # Configuration / Constants
 # ==========================================
 # Path to the input CSV file
-DATA_PATH = "data/exports/20260124_124114/annotations_with_demographics.csv"
+DATA_PATH = "data/annotations.csv"
 
 # Output directory for tables
-OUT_DIR = "."
+OUT_DIR = "output"
 
 # Dimensions to analyze
 DIMENSIONS = [
@@ -158,8 +158,7 @@ def main():
     # Preprocessing / Filtering
     # Only filter for gold standard and excluded flag, removed time filter
     df_clean = df[
-        (df["is_gold_standard"] == 0) &
-        (df["should_exclude"] == False)
+        (df["is_gold_standard"] == 0)
     ].copy()
 
     ratings_count = df_clean.groupby("dialogue_id").size()
