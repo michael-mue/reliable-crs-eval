@@ -1,10 +1,26 @@
-# Reproducibility Package
+# Can Third-Party Annotators Reliably Evaluate Conversational Recommender Systems?
 
-This repository contains the data and analysis scripts accompanying the paper *[Title]*.
+Reproducibility package for the paper:
+
+> Michael Müller, Amir Reza Mohammadi, Andreas Peintner, Beatriz Barroso Gstrein, Günther Specht, Eva Zangerle.
+> **Can Third-Party Annotators Reliably Evaluate Conversational Recommender Systems?**
+> *34th ACM Conference on User Modeling, Adaptation and Personalization (UMAP '26)*, June 08–11, 2026, Gothenburg, Sweden.
+> https://doi.org/10.1145/3774935.3806172
 
 ## Data
 
-`data/annotations.csv` — crowdsourced annotations for 200 CRS dialogues collected from 117 Prolific workers. Each row is one annotation with 18 quality dimensions rated on a 1–5 Likert scale (`accuracy`, `novelty`, `interaction_adequacy`, `explainability`, `cui_adaptability`, `cui_understanding`, `cui_response_quality`, `cui_attentiveness`, `perceived_ease_of_use`, `perceived_usefulness`, `user_control`, `transparency`, `cui_humanness`, `cui_rapport`, `trust_confidence`, `satisfaction`, `intention_to_use`, `intention_to_purchase`). Gold-standard annotation trials are marked via `is_gold_standard`.
+`data/annotations.csv` contains 1,053 crowdsourced annotations collected from 117 Prolific workers (after quality control) on 200 ReDial movie recommendation dialogues. Each row is one annotation with 18 quality dimensions from the [CRS-Que](https://dl.acm.org/doi/10.1145/3626772.3657901) framework, rated on a 1–5 Likert scale.
+
+| Column | Description |
+|---|---|
+| `annotation_id` | Unique annotation identifier |
+| `participant_id` | Anonymized worker ID |
+| `dialogue_id` | ReDial dialogue identifier |
+| `is_gold_standard` | 1 if quasi-gold control dialogue, 0 otherwise |
+| `is_prolific_user` | 1 if recruited via Prolific |
+| `accuracy` … `intention_to_purchase` | 18 CRS-Que dimension ratings (1–5) |
+| `time_spent` | Time spent on annotation (seconds) |
+| `timestamp` | Submission timestamp |
 
 ## Setup
 
@@ -20,24 +36,24 @@ pixi install
 pixi run all
 ```
 
-This runs all three analyses sequentially and writes all outputs to `output/`.
+This runs all three analyses and writes outputs to `output/`.
 
-| Task | Command | Output |
-|---|---|---|
-| Inter-rater reliability | `pixi run reliability` | `output/irr_summary.tex` |
-| ICC power analysis | `pixi run power` | `output/icc_power_analysis_acm.pdf`, `output/icc_precision_acm.pdf` |
-| Correlation heatmap | `pixi run structure` | `output/correlation_heatmap.pdf` |
+| Task | Command | Output | Corresponds to |
+|---|---|---|---|
+| Inter-rater reliability | `pixi run reliability` | `output/irr_summary.tex` | Table 1 |
+| ICC power analysis | `pixi run power` | `output/icc_power_analysis_acm.pdf`, `output/icc_precision_acm.pdf` | Figure 1 |
+| Correlation heatmap | `pixi run structure` | `output/correlation_heatmap.pdf` | Figure 2 |
 
 ## Repository Structure
 
 ```
 ├── data/
-│   └── annotations.csv       # public dataset
+│   └── annotations.csv       # public annotation dataset
 ├── scripts/
-│   ├── reliability_analysis.py   # Krippendorff's alpha, ICC(1), crossed reliability
-│   ├── power_analysis.py         # ICC power and precision analysis figures
-│   └── structure_analysis.py     # Spearman correlation clustermap
-├── output/                   # generated (gitignored)
+│   ├── reliability_analysis.py   # Krippendorff's α, ICC(1), crossed reliability → Table 1
+│   ├── power_analysis.py         # ICC power and precision analysis → Figure 1
+│   └── structure_analysis.py     # Spearman correlation clustermap → Figure 2
+├── output/                   # generated outputs (gitignored)
 ├── pyproject.toml
 └── pixi.lock
 ```

@@ -1,5 +1,5 @@
 [project]
-authors = [{ name = "annonymous", email = "annonymous@annonymous.com" }]
+authors = [{ name = "Michael Müller", email = "michael.m.mueller@uibk.ac.at" }]
 name = "reliable-crs-eval"
 requires-python = ">= 3.11"
 version = "0.1.0"
